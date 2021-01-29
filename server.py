@@ -94,6 +94,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
         
         if request_type == "GET":
             path = prefix+address
+            print("path is", path)
+            print("testing...")
+            print(os.path.exists(path))
             # grab the first and last character of the path
             first_char = address[0]
             last_char = address[-1]
@@ -115,6 +118,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # handle the situation /..
             elif os.path.exists(path):
                 if os.path.isfile(path):
+                    print(path)
                     response = self.valid_response(path, file_type)
                     self.request.sendall(bytearray(response,'utf-8'))
 
@@ -133,6 +137,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             #     self.request.sendall(bytearray(response,'utf-8'))
 
             else:
+                print("here")
                 # throw 404 Page Not Found
                 response = self.create_response(address, 404)
                 self.request.sendall(bytearray(response,'utf-8'))
