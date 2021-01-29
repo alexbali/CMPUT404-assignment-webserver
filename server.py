@@ -97,12 +97,13 @@ class MyWebServer(socketserver.BaseRequestHandler):
             print("path is", path)
             print("testing...")
             print(os.path.exists(path))
+            flag = "/../" in path
             # grab the first and last character of the path
             first_char = address[0]
             last_char = address[-1]
             char_match = first_char == "/" and last_char == "/"
             # handle /../
-            if char_match:
+            if char_match and not flag:
                 # make sure this is a directory
                 if os.path.isdir(path):
                     file_path = prefix + address + "index.html"
@@ -116,7 +117,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     self.request.sendall(bytearray(response,'utf-8'))
 
             # handle the situation /..
-            elif os.path.exists(path):
+            elif os.path.exists(path) and not flag:
                 if os.path.isfile(path):
                     print(path)
                     response = self.valid_response(path, file_type)
